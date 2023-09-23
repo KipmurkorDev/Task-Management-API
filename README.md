@@ -137,5 +137,3 @@ All routes in this API demand authentication, which is implemented using JSON We
 - **Response:** The user's avatar image in PNG format if available, or a 404 error if not found.
 
 ---
-
-This README provides an overview of the API's functionality. Customize it further to align with your application requirements. Additionally, consider including information on error handling and edge cases in your documentation.
