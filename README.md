@@ -1,56 +1,94 @@
-# Task manager application
+Express.js API with Multer and Sharp Middleware
+This is a powerful Express.js API that offers user and task management features, along with image uploading and processing capabilities using Multer and Sharp middleware.
 
-## Setting up a MongoDB database
-To start a new database instance run the following command
-```sh
-{path-to-mongod-file} --dbpath={path-to-data-storage}
-mongodb/bin/mongod --dbpath=/Users/andresalba/mongodb-data
-```
+Table of Contents
+Authentication
+User Routes
+Task Routes
+Image Upload and Processing
+Authentication
+All routes in this API demand authentication, which is implemented using JSON Web Tokens (JWTs). Users can acquire a token by registering or logging in.
 
-The connection URL would be: mongodb://127.0.0.1:27017
-
-## Advanced postman summary
-* Enviroment variables can be created to store data that is going to be used in all requests. This can be done by creating an environment (dev or prod) and then creating environment variables with key value pairs. Then variables can be used using the following syntax: `{{env_variable_name}}``
-
-* Authorization can be added to all requests in a collection, by setting the authotization type in the *Authorization* tab for each request (default value is to be inherited for parent). Therefore, the authorization token must be defined for the whole collection. This can be done by selecting the collection options and then selecting *Edit*. The same options should appear but when a change is made it applies to all the requests.
-
-* The authorization token can also be defined as an environment variable
-
-* *Pre-requisite scripts* could be defined to run Javascript code before the request is sent. The same happens for the *Tests* tab, however this code is ran after sending the request.
-
-* Sample script for defining an environment variable value
-```js
-// Check if the request was succesfull (pm object - short for postman)
-if (pm.response.code === 200) {
-    // Set the environment variable
-    pm.environment.set('authToken', pm.response.json().token)
-}
-```
-
-## MongoDB production instance configuration
-* MongoDB hosting service must be used, the Atlas service is the one used in this course. This one is created by the MongoDB organization
-
-* An account must be created at this [link](https://www.mongodb.com/cloud/atlas)
-
-### Process for setting up a new instance (cluster)
-1. Go to Clusters -> Create New Cluster
-2. Select cloud provider, region, cluster tier, additional settings and cluster name
-3. Once the instance is created, go to the Dashboard and click on *CONNECT*
-4. Set up connection security
-    1. Configure secure IP's. In this case all IP's must be whitelisted because heroku will continously change the server IP. To do so, the IP must be **0.0.0.0/0**.
-    2. Create a database user
-5. Connect to the database using the connection string defined in the GUI. Atlas instance connection client is Compass (Robo3T is not supported)
-
-## Environment variables configuration in Heroku
-* Set environment variable
-```sh
-heroku config:set {key}={value}
-```
-* View all environment variables
-```sh
-heroku config
-```
-* Remove an environment variable
-```sh
-heroku config:unset {key}
-```
+User Registration
+Route: POST /users
+Description: Register a new user.
+Request Body: A JSON object containing user details (name, email, password).
+Response: A JSON object with user details and an authentication token.
+User Login
+Route: POST /users/login
+Description: Log in an existing user.
+Request Body: A JSON object containing user email and password.
+Response: A JSON object with user details and an authentication token.
+User Logout
+Route: POST /users/logout
+Description: Log out the current user.
+Authentication: Requires a valid JWT token.
+Response: Successful logout if the token is valid.
+User Logout from All Devices
+Route: POST /users/logoutAll
+Description: Log out the user from all devices.
+Authentication: Requires a valid JWT token.
+Response: Successful logout from all devices if the token is valid.
+User Routes
+Get User Profile
+Route: GET /users/me
+Description: Retrieve the profile of the authenticated user.
+Authentication: Requires a valid JWT token.
+Response: A JSON object with user details.
+Update User Profile
+Route: PATCH /users/me
+Description: Update user profile information.
+Authentication: Requires a valid JWT token.
+Request Body: A JSON object with user details to be updated (name, email, password, age).
+Response: A JSON object with updated user details.
+Delete User Account
+Route: DELETE /users/me
+Description: Delete the authenticated user's account.
+Authentication: Requires a valid JWT token.
+Response: A JSON object with deleted user details.
+Task Routes
+Create a New Task
+Route: POST /tasks
+Description: Create a new task.
+Authentication: Requires a valid JWT token.
+Request Body: A JSON object containing task details (description).
+Response: A JSON object with created task details.
+Get User's Tasks
+Route: GET /tasks
+Description: Retrieve tasks owned by the authenticated user.
+Authentication: Requires a valid JWT token.
+Query Parameters: completed (boolean), limit (number), skip (number), sortBy (field:asc/desc).
+Response: A JSON array of tasks.
+Get Task by ID
+Route: GET /tasks/:id
+Description: Retrieve a task by its ID.
+Authentication: Requires a valid JWT token.
+Response: A JSON object with task details.
+Update Task
+Route: PATCH /tasks/:id
+Description: Update a task by its ID.
+Authentication: Requires a valid JWT token.
+Request Body: A JSON object with task details to be updated (description, completed).
+Response: A JSON object with updated task details.
+Delete Task
+Route: DELETE /tasks/:id
+Description: Delete a task by its ID.
+Authentication: Requires a valid JWT token.
+Response: A JSON object with deleted task details.
+Image Upload and Processing
+Upload User Avatar
+Route: POST /users/me/avatar
+Description: Upload a user's avatar image.
+Authentication: Requires a valid JWT token.
+Request: Form data with an image file named "avatar."
+Response: Status 200 on successful upload.
+Delete User Avatar
+Route: DELETE /users/me/avatar
+Description: Delete a user's avatar image.
+Authentication: Requires a valid JWT token.
+Response: Status 200 on successful deletion.
+Get User Avatar
+Route: GET /users/:id/avatar
+Description: Retrieve a user's avatar image by their ID.
+Response: The user's avatar image in PNG format if available, or a 404 error if not found.
+This README provides an overview of the API's functionality. Customize it further to align with your application requirements. Additionally, consider including information on error handling and edge cases in your documentation.
